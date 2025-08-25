@@ -11,7 +11,7 @@ const bootstrap = async () => {
         await mongoose.connect(`${envVars.DB_URL}`);
         console.log('connected to mongoose');
 
-        server = app.listen(3000, () => {
+        server = app.listen(envVars.PORT || 4000, () => {
             console.log(`App is listening to ${envVars.PORT}`);
         });
     } catch (error) {
@@ -39,21 +39,33 @@ process.on('uncaughtException', (err) => {
     process.exit(1);
 });
 
-process.on('SIGTERM', (err) => {
-    console.log('SIGTERM signal received ... Server shutting down', err);
+// process.on('SIGTERM', (err) => {
+//     console.log('SIGTERM signal received ... Server shutting down', err);
+//     if (server) {
+//         server.close(() => {
+//             process.exit(1);
+//         });
+//     }
+//     process.exit(1);
+// });
+// process.on('SIGINT', (err) => {
+//     console.log('SIGINT signal received ... Server shutting down', err);
+//     if (server) {
+//         server.close(() => {
+//             process.exit(1);
+//         });
+//     }
+//     process.exit(1);
+// });
+process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received ... Server shutting down');
     if (server) {
-        server.close(() => {
-            process.exit(1);
-        });
+        server.close(() => process.exit(1));
     }
-    process.exit(1);
 });
-process.on('SIGINT', (err) => {
-    console.log('SIGINT signal received ... Server shutting down', err);
+process.on('SIGINT', () => {
+    console.log('SIGINT signal received ... Server shutting down');
     if (server) {
-        server.close(() => {
-            process.exit(1);
-        });
+        server.close(() => process.exit(1));
     }
-    process.exit(1);
 });
