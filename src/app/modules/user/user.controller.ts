@@ -1,23 +1,29 @@
 import {NextFunction, Request, Response} from 'express';
 import statusCodes from 'http-status-codes';
 import {userServices} from './user.services';
-import AppError from '../../errorHelpers/appError';
+import {catchAsync} from '../../utils/catchAsync';
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        throw new AppError(statusCodes.BAD_REQUEST, 'Fake error');
+const createUser = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
         const user = await userServices.createUser(req.body);
         res.status(statusCodes.CREATED).json({
             message: 'User created successfully',
             user,
         });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-        console.log(error);
-        next(error);
-    }
-};
+    },
+);
+const getAllUsers = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const users = await userServices.getAllUsers();
+        res.status(statusCodes.OK).json({
+            success: true,
+            message: 'All users retrieved successfully',
+            data: users,
+        });
+    },
+);
 
 export const userControllers = {
     createUser,
+    getAllUsers,
 };
