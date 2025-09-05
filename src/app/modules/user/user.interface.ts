@@ -1,6 +1,6 @@
 import {Types} from 'mongoose';
 
-export enum isActive {
+export enum IsActive {
     ACTIVE = 'ACTIVE',
     INACTIVE = 'INACTIVE',
     BLOCKED = 'BLOCKED',
@@ -13,7 +13,7 @@ export enum Role {
 }
 
 export interface IAuthProvider {
-    provider: string;
+    provider: 'google' | 'credentials';
     providerId: string;
 }
 export interface IUser {
