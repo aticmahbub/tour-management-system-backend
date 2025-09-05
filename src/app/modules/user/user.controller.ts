@@ -1,24 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {NextFunction, Request, Response} from 'express';
 import statusCodes from 'http-status-codes';
 import {userServices} from './user.services';
 import {catchAsync} from '../../utils/catchAsync';
+import {sendResponse} from '../../utils/sendResponse';
 
 const createUser = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const user = await userServices.createUser(req.body);
-        res.status(statusCodes.CREATED).json({
+        sendResponse(res, {
+            success: true,
+            statusCode: statusCodes.CREATED,
             message: 'User created successfully',
-            user,
+            data: user,
         });
     },
 );
 const getAllUsers = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        const users = await userServices.getAllUsers();
-        res.status(statusCodes.OK).json({
+        const result = await userServices.getAllUsers();
+        sendResponse(res, {
             success: true,
+            statusCode: statusCodes.OK,
             message: 'All users retrieved successfully',
-            data: users,
+            data: result.data,
+            meta: result.meta,
         });
     },
 );
