@@ -30,7 +30,7 @@ const getAllUsers = async () => {
     return {data: users, meta: {total: totalUsers}};
 };
 
-export const userServices = {
+export const UserServices = {
     createUser,
     getAllUsers,
 };
