@@ -3,11 +3,11 @@ import {NextFunction, Request, Response} from 'express';
 import {catchAsync} from '../../utils/catchAsync';
 import {sendResponse} from '../../utils/sendResponse';
 import {StatusCodes} from 'http-status-codes';
-import {AuthServices} from './auth.services';
+import {authServices} from './auth.services';
 
 const credentialsLogin = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        const loginInfo = await AuthServices.credentialsLogin(req.body);
+        const loginInfo = await authServices.credentialsLogin(req.body);
         sendResponse(res, {
             success: true,
             statusCode: StatusCodes.ACCEPTED,
@@ -17,4 +17,4 @@ const credentialsLogin = catchAsync(
     },
 );
 
-export const AuthControllers = {credentialsLogin};
+export const authControllers = {credentialsLogin};

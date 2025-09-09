@@ -33,4 +33,4 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     return {accessToken};
 };
 
-export const AuthServices = {credentialsLogin};
+export const authServices = {credentialsLogin};
