@@ -17,5 +17,10 @@ router.get(
     checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
     userControllers.getAllUsers,
 );
+router.patch(
+    '/:id',
+    checkAuth(...Object.values(Role)),
+    userControllers.updateUser,
+);
 
 export const userRoutes = router;
