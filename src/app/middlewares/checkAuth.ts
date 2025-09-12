@@ -21,7 +21,7 @@ export const checkAuth =
                     'You are not authorized to view this route',
                 );
             }
-            console.log(verifiedToken);
+            req.user = verifiedToken;
             next();
         } catch (error) {
             next(error);
