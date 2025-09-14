@@ -58,5 +58,28 @@ const logout = catchAsync(
         });
     },
 );
+const resetPassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const newPassword = req.body.newPassword;
+        const oldPassword = req.body.oldPassword;
+        const decodedToken = req.user;
+        const newUpdatedPassword = await AuthServices.resetPassword(
+            oldPassword,
+            newPassword,
+            decodedToken,
+        );
+        sendResponse(res, {
+            success: true,
+            statusCode: StatusCodes.ACCEPTED,
+            message: 'Password is changed successfully',
+            data: null,
+        });
+    },
+);
 
-export const authControllers = {credentialsLogin, getNewAccessToken, logout};
+export const authControllers = {
+    credentialsLogin,
+    getNewAccessToken,
+    logout,
+    resetPassword,
+};
