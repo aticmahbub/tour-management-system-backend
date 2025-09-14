@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {Router} from 'express';
 import {authControllers} from './auth.controller';
 import {checkAuth} from '../../middlewares/checkAuth';
 import {Role} from '../user/user.interface';
+import passport from 'passport';
 
 const router = Router();
 
@@ -13,5 +15,16 @@ router.post(
     checkAuth(...Object.values(Role)),
     authControllers.resetPassword,
 );
-
+router.get('/google', async (req, res, next) => {
+    const redirect = req.query.redirect || '/';
+    passport.authenticate('google', {
+        scope: ['profile', 'email'],
+        state: redirect as string,
+    })(req, res, next);
+});
+router.get(
+    '/google/callback',
+    passport.authenticate('google', {failureRedirect: '/login'}),
+    authControllers.googleCallbackController,
+);
 export const authRoutes = router;

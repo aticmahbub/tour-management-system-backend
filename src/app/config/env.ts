@@ -35,7 +35,7 @@ const loadEnvVariables = (): EnvConfig => {
         'GOOGLE_CLIENT_SECRET',
         'GOOGLE_CALLBACK_URL',
         'EXPRESS_SESSION_SECRET',
-        'FRONTEND_URL,',
+        'FRONTEND_URL',
     ];
     requiredEnvVariables.forEach((key) => {
         if (!process.env[key]) {
