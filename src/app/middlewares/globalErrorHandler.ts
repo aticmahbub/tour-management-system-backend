@@ -11,9 +11,31 @@ export const globalErrorHandler = (
     next: NextFunction,
 ) => {
     console.log(err);
+    const errorSources: any = [
+        // {path: 'isDeleted',
+        // message: 'Cast failed'}
+    ];
     let statusCode = 500;
     let message = `Something went wrong,${err.message}`;
-    if (err instanceof AppError) {
+    if (err.code === 11000) {
+        const matchedArray = err.message.match(/"([^"]*)"/);
+        statusCode = 400;
+        message = `${matchedArray[1]} already exists`;
+    } else if (err.name === 'CastError') {
+        statusCode = 400;
+        message = 'Invalid mongodb ObjectId';
+    } else if (err.name === 'ValidationError') {
+        statusCode = 400;
+        const errors = Object.values(err.errors);
+
+        errors.forEach((errorObject: any) =>
+            errorSources.push({
+                path: errorObject.path,
+                message: errorObject.message,
+            }),
+        );
+        message = err.message;
+    } else if (err instanceof AppError) {
         statusCode = err.statusCode;
         message = err.message;
     } else if (err instanceof Error) {
@@ -23,7 +45,8 @@ export const globalErrorHandler = (
     res.status(statusCode).json({
         success: false,
         message,
-        err,
+        errorSources,
+        // err,
         stack: envVars.NODE_ENV === 'development' ? err.stack : null,
     });
 };
