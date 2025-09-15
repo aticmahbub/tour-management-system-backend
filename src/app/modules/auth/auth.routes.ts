@@ -8,6 +8,10 @@ import passport from 'passport';
 const router = Router();
 
 router.post('/login', authControllers.credentialsLogin);
+router.post(
+    '/login-with-passportjs',
+    authControllers.credentialsLoginWithPassportJS,
+);
 router.post('/refresh-token', authControllers.getNewAccessToken);
 router.post('/logout', authControllers.logout);
 router.post(

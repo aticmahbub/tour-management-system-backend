@@ -9,6 +9,7 @@ import {setAuthCookie} from '../../utils/setCookie';
 import {JwtPayload} from 'jsonwebtoken';
 import {createUserTokens} from '../../utils/userTokens';
 import {envVars} from '../../config/env';
+import passport from 'passport';
 
 const credentialsLogin = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -20,6 +21,50 @@ const credentialsLogin = catchAsync(
             message: 'User logged in successfully',
             data: loginInfo,
         });
+    },
+);
+const credentialsLoginWithPassportJS = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        passport.authenticate(
+            'local',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            async (err: any, user: any, info: any) => {
+                if (err) {
+                    return next(new AppError(401, err));
+                }
+
+                if (!user) {
+                    return next(new AppError(401, info.message));
+                }
+
+                const userTokens = await createUserTokens(user);
+
+                const {password: pass, ...rest} = user.toObject();
+
+                setAuthCookie(res, userTokens);
+
+                sendResponse(res, {
+                    success: true,
+                    statusCode: StatusCodes.OK,
+                    message: 'User Logged In Successfully',
+                    data: {
+                        accessToken: userTokens.accessToken,
+                        refreshToken: userTokens.refreshToken,
+                        user: rest,
+                    },
+                });
+            },
+        )(req, res, next);
+
+        // res.cookie("accessToken", loginInfo.accessToken, {
+        //     httpOnly: true,
+        //     secure: false
+        // })
+
+        // res.cookie("refreshToken", loginInfo.refreshToken, {
+        //     httpOnly: true,
+        //     secure: false,
+        // })
     },
 );
 const getNewAccessToken = catchAsync(
@@ -120,4 +165,5 @@ export const authControllers = {
     logout,
     resetPassword,
     googleCallbackController,
+    credentialsLoginWithPassportJS,
 };
