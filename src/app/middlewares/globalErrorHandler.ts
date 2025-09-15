@@ -17,14 +17,20 @@ export const globalErrorHandler = (
     ];
     let statusCode = 500;
     let message = `Something went wrong,${err.message}`;
+
+    // Mongoose duplicate error
     if (err.code === 11000) {
         const matchedArray = err.message.match(/"([^"]*)"/);
         statusCode = 400;
         message = `${matchedArray[1]} already exists`;
-    } else if (err.name === 'CastError') {
+    }
+    // Mongoose cast error
+    else if (err.name === 'CastError') {
         statusCode = 400;
         message = 'Invalid mongodb ObjectId';
-    } else if (err.name === 'ValidationError') {
+    }
+    // Mongoose validation error
+    else if (err.name === 'ValidationError') {
         statusCode = 400;
         const errors = Object.values(err.errors);
 
@@ -35,6 +41,17 @@ export const globalErrorHandler = (
             }),
         );
         message = err.message;
+    }
+    // Zod error
+    else if (err.name === 'ZodError') {
+        statusCode = 400;
+        message = 'Zod Error';
+        err.issues.forEach((issue: any) => {
+            errorSources.push({
+                path: issue.path[issue.path.length - 1],
+                message: issue.message,
+            });
+        });
     } else if (err instanceof AppError) {
         statusCode = err.statusCode;
         message = err.message;
@@ -46,7 +63,7 @@ export const globalErrorHandler = (
         success: false,
         message,
         errorSources,
-        // err,
+        err,
         stack: envVars.NODE_ENV === 'development' ? err.stack : null,
     });
 };
