@@ -24,7 +24,7 @@ const bookingSchema = new Schema<IBooking>(
         },
         guestCount: {
             type: Number,
-            required: true,
+            // required: true,
         },
     },
     {

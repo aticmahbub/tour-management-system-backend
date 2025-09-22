@@ -31,4 +31,4 @@ router.get(
     passport.authenticate('google', {failureRedirect: '/login'}),
     authControllers.googleCallbackController,
 );
-export const authRoutes = router;
+export const AuthRoutes = router;

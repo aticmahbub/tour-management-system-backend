@@ -1,15 +1,17 @@
 import {Router} from 'express';
-import {userRoutes} from '../modules/user/user.routes';
-import {authRoutes} from '../modules/auth/auth.routes';
-import {divisionRoutes} from '../modules/division/division.route';
+import {UserRoutes} from '../modules/user/user.routes';
+import {AuthRoutes} from '../modules/auth/auth.routes';
+import {DivisionRoutes} from '../modules/division/division.route';
 import {TourRoutes} from '../modules/tour/tour.route';
+import {BookingRoutes} from '../modules/booking/booking.route';
 
 export const router = Router();
 const moduleRoutes = [
-    {path: '/user', route: userRoutes},
-    {path: '/auth', route: authRoutes},
-    {path: '/division', route: divisionRoutes},
+    {path: '/user', route: UserRoutes},
+    {path: '/auth', route: AuthRoutes},
+    {path: '/division', route: DivisionRoutes},
     {path: '/tour', route: TourRoutes},
+    {path: '/booking', route: BookingRoutes},
 ];
 
 moduleRoutes.forEach((route) => {
