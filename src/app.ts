@@ -20,15 +20,17 @@ app.use(
 );
 
 app.use(express.json());
-app.use(cookieParser());
-
 app.use(cors());
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(cookieParser());
 app.use('/api/v1/', router);
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get('/', (req: Request, res: Response) => {
-    res.status(200).json({message: 'Tour management server is up and running'});
+    res.status(200).json({
+        message: 'Tour management system server is up and running',
+    });
 });
 
 app.use(globalErrorHandler);

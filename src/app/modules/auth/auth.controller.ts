@@ -37,7 +37,7 @@ const credentialsLoginWithPassportJS = catchAsync(
                     return next(new AppError(401, info.message));
                 }
 
-                const userTokens = await createUserTokens(user);
+                const userTokens = createUserTokens(user);
 
                 const {password: pass, ...rest} = user.toObject();
 
@@ -55,16 +55,6 @@ const credentialsLoginWithPassportJS = catchAsync(
                 });
             },
         )(req, res, next);
-
-        // res.cookie("accessToken", loginInfo.accessToken, {
-        //     httpOnly: true,
-        //     secure: false
-        // })
-
-        // res.cookie("refreshToken", loginInfo.refreshToken, {
-        //     httpOnly: true,
-        //     secure: false,
-        // })
     },
 );
 const getNewAccessToken = catchAsync(
