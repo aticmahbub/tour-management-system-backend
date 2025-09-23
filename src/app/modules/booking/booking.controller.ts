@@ -31,8 +31,7 @@ const getUserBookings = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.getBookingById();
-    sendResponse(res, {
+    const booking = BookingService.sendResponse(res, {
         success: true,
         statusCode: StatusCodes.CREATED,
         message: 'Booking retrieved successfully',
@@ -41,8 +40,7 @@ const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllBookings = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.getBookingById();
-    sendResponse(res, {
+    const booking = BookingService.sendResponse(res, {
         success: true,
         statusCode: StatusCodes.CREATED,
         message: 'Booking retrieved successfully',
@@ -51,8 +49,7 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.getBookingById();
-    sendResponse(res, {
+    const booking = BookingService.sendResponse(res, {
         success: true,
         statusCode: StatusCodes.CREATED,
         message: 'Booking retrieved successfully',
