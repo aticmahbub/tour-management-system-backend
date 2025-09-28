@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 interface EnvConfig {
@@ -18,6 +17,12 @@ interface EnvConfig {
     GOOGLE_CALLBACK_URL: string;
     EXPRESS_SESSION_SECRET: string;
     FRONTEND_URL: string;
+    CLOUDINARY: {
+        CLOUDINARY_CLOUD_NAME: string;
+        CLOUDINARY_API_KEY: string;
+        CLOUDINARY_API_SECRET: string;
+    };
+
     SSL: {
         SSL_STORE_ID: string;
         SSL_STORE_PASS: string;
@@ -31,6 +36,7 @@ interface EnvConfig {
         SSL_CANCEL_BACKEND_URL: string;
     };
 }
+
 const loadEnvVariables = (): EnvConfig => {
     const requiredEnvVariables: string[] = [
         'PORT',
@@ -48,6 +54,9 @@ const loadEnvVariables = (): EnvConfig => {
         'GOOGLE_CALLBACK_URL',
         'EXPRESS_SESSION_SECRET',
         'FRONTEND_URL',
+        'CLOUDINARY_CLOUD_NAME',
+        'CLOUDINARY_API_KEY',
+        'CLOUDINARY_API_SECRET',
         'SSL_STORE_ID',
         'SSL_STORE_PASS',
         'SSL_PAYMENT_API',
@@ -59,11 +68,13 @@ const loadEnvVariables = (): EnvConfig => {
         'SSL_FAIL_BACKEND_URL',
         'SSL_CANCEL_BACKEND_URL',
     ];
+
     requiredEnvVariables.forEach((key) => {
         if (!process.env[key]) {
             throw new Error(`Missing required env variable ${key}`);
         }
     });
+
     return {
         PORT: process.env.PORT as string,
         DB_URL: process.env.DB_URL as string,
@@ -80,7 +91,11 @@ const loadEnvVariables = (): EnvConfig => {
         GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL as string,
         EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
         FRONTEND_URL: process.env.FRONTEND_URL as string,
-
+        CLOUDINARY: {
+            CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+            CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+            CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+        },
         SSL: {
             SSL_STORE_ID: process.env.SSL_STORE_ID as string,
             SSL_STORE_PASS: process.env.SSL_STORE_PASS as string,
@@ -99,4 +114,5 @@ const loadEnvVariables = (): EnvConfig => {
         },
     };
 };
+
 export const envVars = loadEnvVariables();
