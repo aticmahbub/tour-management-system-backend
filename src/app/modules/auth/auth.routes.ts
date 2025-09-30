@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {Router} from 'express';
 import {authControllers} from './auth.controller';
 import {checkAuth} from '../../middlewares/checkAuth';
@@ -18,6 +17,16 @@ router.post(
     '/reset-password',
     checkAuth(...Object.values(Role)),
     authControllers.resetPassword,
+);
+router.post(
+    '/change-password',
+    checkAuth(...Object.values(Role)),
+    authControllers.changePassword,
+);
+router.post(
+    '/set-password',
+    checkAuth(...Object.values(Role)),
+    authControllers.setPassword,
 );
 router.get('/google', async (req, res, next) => {
     const redirect = req.query.redirect || '/';

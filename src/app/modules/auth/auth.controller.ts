@@ -116,19 +116,42 @@ const resetPassword = catchAsync(
         });
     },
 );
-// const googleCallbackController = catchAsync(
-//     async (req: Request, res: Response, next: NextFunction) => {
-//         const user = req.user;
-//         console.log(user);
-//         if (!user) {
-//             throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
-//         }
-//         const tokenInfo = createUserTokens(user);
-//         setAuthCookie(res, tokenInfo);
+const changePassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const decodedToken = req.user as JwtPayload;
+        const {password} = req.body;
 
-//         res.redirect(envVars.FRONTEND_URL);
-//     },
-// );
+        await AuthServices.setPassword(decodedToken.userId, password);
+
+        sendResponse(res, {
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Password Changed Successfully',
+            data: null,
+        });
+    },
+);
+const setPassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const newPassword = req.body.newPassword;
+        const oldPassword = req.body.oldPassword;
+        const decodedToken = req.user;
+
+        await AuthServices.resetPassword(
+            oldPassword,
+            newPassword,
+            decodedToken as JwtPayload,
+        );
+
+        sendResponse(res, {
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Password Changed Successfully',
+            data: null,
+        });
+    },
+);
+
 const googleCallbackController = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         let redirectTo = req.query.state ? (req.query.state as string) : '';
@@ -154,6 +177,8 @@ export const authControllers = {
     getNewAccessToken,
     logout,
     resetPassword,
+    changePassword,
+    setPassword,
     googleCallbackController,
     credentialsLoginWithPassportJS,
 };
