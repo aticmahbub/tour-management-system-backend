@@ -65,11 +65,25 @@ const logout = catchAsync(
 );
 const resetPassword = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
+        const decodedToken = req.user;
+
+        await AuthServices.resetPassword(req.body, decodedToken as JwtPayload);
+
+        sendResponse(res, {
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Password Changed Successfully',
+            data: null,
+        });
+    },
+);
+const changePassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
         const newPassword = req.body.newPassword;
         const oldPassword = req.body.oldPassword;
         const decodedToken = req.user;
 
-        await AuthServices.resetPassword(
+        await AuthServices.changePassword(
             oldPassword,
             newPassword,
             decodedToken as JwtPayload,
@@ -83,7 +97,7 @@ const resetPassword = catchAsync(
         });
     },
 );
-const changePassword = catchAsync(
+const setPassword = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const decodedToken = req.user as JwtPayload;
         const {password} = req.body;
@@ -98,22 +112,16 @@ const changePassword = catchAsync(
         });
     },
 );
-const setPassword = catchAsync(
+const forgotPassword = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        const newPassword = req.body.newPassword;
-        const oldPassword = req.body.oldPassword;
-        const decodedToken = req.user;
+        const {email} = req.body;
 
-        await AuthServices.resetPassword(
-            oldPassword,
-            newPassword,
-            decodedToken as JwtPayload,
-        );
+        await AuthServices.forgotPassword(email);
 
         sendResponse(res, {
             success: true,
             statusCode: StatusCodes.OK,
-            message: 'Password Changed Successfully',
+            message: 'Email sent successfully',
             data: null,
         });
     },
