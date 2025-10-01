@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use('/api/v1/', router);
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({

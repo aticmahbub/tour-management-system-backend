@@ -9,9 +9,9 @@ import {StatusCodes} from 'http-status-codes';
 const createUser = async (payload: Partial<IUser>) => {
     const {email, password, ...rest} = payload;
     const isUserExist = await User.findOne({email});
-    // if (isUserExist) {
-    //     throw new AppError(StatusCodes.BAD_REQUEST, 'User already exists');
-    // }
+    if (isUserExist) {
+        throw new AppError(StatusCodes.BAD_REQUEST, 'User already exists');
+    }
     const hashedPassword = await bcryptjs.hash(
         password as string,
         Number(envVars.BCRYPT_SALT_ROUND),
@@ -85,8 +85,19 @@ const getAllUsers = async () => {
     return {data: users, meta: {total: totalUsers}};
 };
 
+const getSingleUser = async (id: string) => {
+    const user = await User.findById(id).select('-password');
+    return {data: user};
+};
+const getMe = async (userId: string) => {
+    const user = await User.findById(userId).select('-password');
+    return {data: user};
+};
+
 export const UserServices = {
     createUser,
     getAllUsers,
     updateUser,
+    getSingleUser,
+    getMe,
 };

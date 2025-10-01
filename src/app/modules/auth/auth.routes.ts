@@ -1,33 +1,35 @@
 import {Router} from 'express';
-import {authControllers} from './auth.controller';
+import {AuthController} from './auth.controller';
 import {checkAuth} from '../../middlewares/checkAuth';
 import {Role} from '../user/user.interface';
 import passport from 'passport';
+import {envVars} from '../../config/env';
 
 const router = Router();
 
-router.post('/login', authControllers.credentialsLogin);
+router.post('/login', AuthController.credentialsLogin);
 router.post(
     '/login-with-passportjs',
-    authControllers.credentialsLoginWithPassportJS,
+    AuthController.credentialsLoginWithPassportJS,
 );
-router.post('/refresh-token', authControllers.getNewAccessToken);
-router.post('/logout', authControllers.logout);
+router.post('/refresh-token', AuthController.getNewAccessToken);
+router.post('/logout', AuthController.logout);
 router.post(
     '/reset-password',
     checkAuth(...Object.values(Role)),
-    authControllers.resetPassword,
+    AuthController.resetPassword,
 );
 router.post(
     '/change-password',
     checkAuth(...Object.values(Role)),
-    authControllers.changePassword,
+    AuthController.changePassword,
 );
 router.post(
     '/set-password',
     checkAuth(...Object.values(Role)),
-    authControllers.setPassword,
+    AuthController.setPassword,
 );
+router.post('/forgot-password', AuthController.forgotPassword);
 router.get('/google', async (req, res, next) => {
     const redirect = req.query.redirect || '/';
     passport.authenticate('google', {
@@ -37,7 +39,11 @@ router.get('/google', async (req, res, next) => {
 });
 router.get(
     '/google/callback',
-    passport.authenticate('google', {failureRedirect: '/login'}),
-    authControllers.googleCallbackController,
+    passport.authenticate('google', {
+        // session: false,
+        failureRedirect: `${envVars.FRONTEND_URL}/login?error=There is some issues with your account. Please contact with out support team!`,
+    }),
+    AuthController.googleCallbackController,
 );
+
 export const AuthRoutes = router;
