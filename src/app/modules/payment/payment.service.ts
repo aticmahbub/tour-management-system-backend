@@ -46,9 +46,6 @@ const initPayment = async (bookingId: string) => {
     };
 };
 const successPayment = async (query: Record<string, string>) => {
-    // Update Booking Status to COnfirm
-    // Update Payment Status to PAID
-
     const session = await Booking.startSession();
     session.startTransaction();
 
@@ -178,10 +175,20 @@ const cancelPayment = async (query: Record<string, string>) => {
         throw error;
     }
 };
-
+const getInvoiceDownloadUrl = async (paymentId: string) => {
+    const payment = await Payment.findById(paymentId).select('invoiceUrl');
+    if (!payment) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Payment not found');
+    }
+    if (!payment.invoiceUrl) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Invoice not found');
+    }
+    return payment.invoiceUrl;
+};
 export const PaymentService = {
     initPayment,
     successPayment,
     failPayment,
     cancelPayment,
+    getInvoiceDownloadUrl,
 };
