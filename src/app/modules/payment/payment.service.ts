@@ -117,13 +117,12 @@ const successPayment = async (query: Record<string, string>) => {
             ],
         });
 
-        await session.commitTransaction(); //transaction
+        await session.commitTransaction();
         session.endSession();
         return {success: true, message: 'Payment Completed Successfully'};
     } catch (error) {
-        await session.abortTransaction(); // rollback
+        await session.abortTransaction();
         session.endSession();
-        // throw new AppError(httpStatus.BAD_REQUEST, error) ❌❌
         throw error;
     }
 };
