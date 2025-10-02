@@ -66,8 +66,8 @@ const loadEnvVariables = (): EnvConfig => {
         'GOOGLE_CALLBACK_URL',
         'EXPRESS_SESSION_SECRET',
         'FRONTEND_URL',
-        'SSL_STORE_ID',
-        'SSL_STORE_PASS',
+        'STORE_ID',
+        'STORE_PASS',
         'SSL_PAYMENT_API',
         'SSL_VALIDATION_API',
         'SSL_SUCCESS_FRONTEND_URL',
@@ -116,8 +116,8 @@ const loadEnvVariables = (): EnvConfig => {
         FRONTEND_URL: process.env.FRONTEND_URL as string,
         // ssl
         SSL: {
-            STORE_ID: process.env.SSL_STORE_ID as string,
-            STORE_PASS: process.env.SSL_STORE_PASS as string,
+            STORE_ID: process.env.STORE_ID as string,
+            STORE_PASS: process.env.STORE_PASS as string,
             SSL_PAYMENT_API: process.env.SSL_PAYMENT_API as string,
             SSL_VALIDATION_API: process.env.SSL_VALIDATION_API as string,
             SSL_SUCCESS_FRONTEND_URL: process.env

@@ -27,7 +27,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
         }
 
         const tour = await Tour.findById(payload.tour).select('costFrom');
-        if (!tour) {
+        if (!tour?.costFrom) {
             throw new AppError(StatusCodes.BAD_REQUEST, 'No tour cost found');
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -48,8 +48,8 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
                 {
                     booking: booking[0]._id,
                     status: BOOKING_STATUS.UNPAID,
-                    transactionId,
-                    amount,
+                    transactionId: transactionId,
+                    amount: amount,
                 },
             ],
             {session},
@@ -67,13 +67,14 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
         const userEmail = (updatedBooking?.user as any).email;
         const userPhoneNumber = (updatedBooking?.user as any).phone;
         const userName = (updatedBooking?.user as any).name;
+
         const sslPayload: ISSLCommerz = {
             address: userAddress,
             email: userEmail,
             phoneNumber: userPhoneNumber,
             name: userName,
-            amount,
-            transactionId,
+            amount: amount,
+            transactionId: transactionId,
         };
         const sslPayment = await SSLService.sslPaymentInit(sslPayload);
 
@@ -84,7 +85,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
             booking: updatedBooking,
         };
     } catch (error) {
-        session.abortTransaction();
+        await session.abortTransaction();
         session.endSession();
         throw error;
     }
