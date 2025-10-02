@@ -6,6 +6,7 @@ import {TourRoutes} from '../modules/tour/tour.route';
 import {BookingRoutes} from '../modules/booking/booking.route';
 import {PaymentRoutes} from '../modules/payment/payment.route';
 import {OTPRoutes} from '../modules/otp/otp.route';
+import {StatsRoutes} from '../modules/stats/stats.route';
 
 export const router = Router();
 const moduleRoutes = [
@@ -16,6 +17,7 @@ const moduleRoutes = [
     {path: '/booking', route: BookingRoutes},
     {path: '/payment', route: PaymentRoutes},
     {path: '/otp', route: OTPRoutes},
+    {path: '/stats', route: StatsRoutes},
 ];
 
 moduleRoutes.forEach((route) => {
