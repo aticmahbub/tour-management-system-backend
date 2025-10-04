@@ -5,6 +5,11 @@ import {StatsController} from './stats.controller';
 const router = express.Router();
 
 router.get(
+    '/user',
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    StatsController.getUserStats,
+);
+router.get(
     '/booking',
     checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
     StatsController.getBookingStats,
@@ -13,11 +18,6 @@ router.get(
     '/payment',
     checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
     StatsController.getPaymentStats,
-);
-router.get(
-    '/user',
-    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-    StatsController.getUserStats,
 );
 router.get(
     '/tour',

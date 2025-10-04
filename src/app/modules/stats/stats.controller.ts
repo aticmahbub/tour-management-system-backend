@@ -3,8 +3,17 @@ import {catchAsync} from '../../utils/catchAsync';
 import {StatsService} from './stats.service';
 import {sendResponse} from '../../utils/sendResponse';
 
+const getUserStats = catchAsync(async (req: Request, res: Response) => {
+    const stats = await StatsService.getUserStats();
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Booking stats fetched successfully',
+        data: stats,
+    });
+});
 const getBookingStats = catchAsync(async (req: Request, res: Response) => {
-    const stats = await StatsService.getBookingStats;
+    const stats = await StatsService.getBookingStats();
     sendResponse(res, {
         statusCode: 200,
         success: true,
@@ -21,15 +30,7 @@ const getPaymentStats = catchAsync(async (req: Request, res: Response) => {
         data: stats,
     });
 });
-const getUserStats = catchAsync(async (req: Request, res: Response) => {
-    const stats = await StatsService.getUserStats;
-    sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: 'Booking stats fetched successfully',
-        data: stats,
-    });
-});
+
 const getTourStats = catchAsync(async (req: Request, res: Response) => {
     const stats = await StatsService.getTourStats;
     sendResponse(res, {
