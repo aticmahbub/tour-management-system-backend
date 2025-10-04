@@ -25,8 +25,8 @@ const userSchema = new mongoose_1.Schema({
     isDeleted: { type: Boolean, default: false },
     isActive: {
         type: String,
-        enum: Object.values(user_interface_1.isActive),
-        default: user_interface_1.isActive.ACTIVE,
+        enum: Object.values(user_interface_1.IsActive),
+        default: user_interface_1.IsActive.ACTIVE,
     },
     isVerified: { type: Boolean, default: false },
     auths: [authProviderSchema],

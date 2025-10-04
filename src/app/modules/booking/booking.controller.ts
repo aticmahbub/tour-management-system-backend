@@ -1,59 +1,62 @@
 import {Request, Response} from 'express';
+// import catchAsync from "../utils/catchAsync";
+import {JwtPayload} from 'jsonwebtoken';
 import {catchAsync} from '../../utils/catchAsync';
 import {sendResponse} from '../../utils/sendResponse';
 import {BookingService} from './booking.service';
-import {StatusCodes} from 'http-status-codes';
-import {JwtPayload} from 'jsonwebtoken';
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
-    const decodedToken = req.user as JwtPayload;
+    const decodeToken = req.user as JwtPayload;
     const booking = await BookingService.createBooking(
         req.body,
-        decodedToken.userId,
+        decodeToken.userId,
     );
-
     sendResponse(res, {
+        statusCode: 201,
         success: true,
-        statusCode: StatusCodes.CREATED,
         message: 'Booking created successfully',
         data: booking,
     });
 });
 
 const getUserBookings = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.getUserBookings();
+    const bookings = await BookingService.getUserBookings();
     sendResponse(res, {
+        statusCode: 200,
         success: true,
-        statusCode: StatusCodes.CREATED,
         message: 'Bookings retrieved successfully',
-        data: booking,
+        data: bookings,
     });
 });
-
 const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.sendResponse(res, {
+    const booking = await BookingService.getBookingById();
+    sendResponse(res, {
+        statusCode: 200,
         success: true,
-        statusCode: StatusCodes.CREATED,
         message: 'Booking retrieved successfully',
         data: booking,
     });
 });
 
 const getAllBookings = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.sendResponse(res, {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const bookings = await BookingService.getAllBookings();
+    sendResponse(res, {
+        statusCode: 200,
         success: true,
-        statusCode: StatusCodes.CREATED,
-        message: 'Booking retrieved successfully',
-        data: booking,
+        message: 'Bookings retrieved successfully',
+        data: {},
+        // meta: {},
     });
 });
 
 const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
-    const booking = BookingService.sendResponse(res, {
+    const updated = await BookingService.updateBookingStatus();
+    sendResponse(res, {
+        statusCode: 200,
         success: true,
-        statusCode: StatusCodes.CREATED,
-        message: 'Booking retrieved successfully',
-        data: booking,
+        message: 'Booking Status Updated Successfully',
+        data: updated,
     });
 });
 

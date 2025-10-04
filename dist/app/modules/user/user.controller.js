@@ -1,38 +1,68 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userControllers = void 0;
-const user_model_1 = require("./user.model");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { name, email } = req.body;
-        const user = yield user_model_1.User.create({ name, email });
-        res.status(http_status_codes_1.default.CREATED).json({
-            message: 'User created successfully',
-            user,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }
-    catch (error) {
-        console.log(error);
-        res.status(http_status_codes_1.default.BAD_REQUEST).json({
-            message: `Something went wrong!!! ${error.message}`,
-            error,
-        });
-    }
+const user_services_1 = require("./user.services");
+const catchAsync_1 = require("../../utils/catchAsync");
+const sendResponse_1 = require("../../utils/sendResponse");
+const createUser = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const user = await user_services_1.UserServices.createUser(req.body);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.CREATED,
+        message: 'User created successfully',
+        data: user,
+    });
+});
+const updateUser = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const userId = req.params.id;
+    const token = req.headers.authorization;
+    const verifiedToken = req.user;
+    const payload = req.body;
+    const user = await user_services_1.UserServices.updateUser(userId, payload, verifiedToken);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.CREATED,
+        message: 'User updated successfully',
+        data: user,
+    });
+});
+const getAllUsers = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const result = await user_services_1.UserServices.getAllUsers();
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: 'All users retrieved successfully',
+        data: result.data,
+        meta: result.meta,
+    });
+});
+const getSingleUser = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const id = req.params.id;
+    const result = await user_services_1.UserServices.getSingleUser(id);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: 'User retrieved successfully',
+        data: result.data,
+    });
+});
+const getMe = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const decodedToken = req.user;
+    const result = await user_services_1.UserServices.getMe(decodedToken.userId);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: 'User retrieved successfully',
+        data: result.data,
+    });
 });
 exports.userControllers = {
     createUser,
+    getAllUsers,
+    updateUser,
+    getMe,
 };
