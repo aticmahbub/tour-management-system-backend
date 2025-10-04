@@ -12,6 +12,15 @@ const getUserStats = catchAsync(async (req: Request, res: Response) => {
         data: stats,
     });
 });
+const getTourStats = catchAsync(async (req: Request, res: Response) => {
+    const stats = await StatsService.getTourStats();
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Tour stats fetched successfully',
+        data: stats,
+    });
+});
 const getBookingStats = catchAsync(async (req: Request, res: Response) => {
     const stats = await StatsService.getBookingStats();
     sendResponse(res, {
@@ -23,16 +32,6 @@ const getBookingStats = catchAsync(async (req: Request, res: Response) => {
 });
 const getPaymentStats = catchAsync(async (req: Request, res: Response) => {
     const stats = await StatsService.getPaymentStats;
-    sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: 'Booking stats fetched successfully',
-        data: stats,
-    });
-});
-
-const getTourStats = catchAsync(async (req: Request, res: Response) => {
-    const stats = await StatsService.getTourStats;
     sendResponse(res, {
         statusCode: 200,
         success: true,
