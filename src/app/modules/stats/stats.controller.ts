@@ -31,11 +31,11 @@ const getBookingStats = catchAsync(async (req: Request, res: Response) => {
     });
 });
 const getPaymentStats = catchAsync(async (req: Request, res: Response) => {
-    const stats = await StatsService.getPaymentStats;
+    const stats = await StatsService.getPaymentStats();
     sendResponse(res, {
         statusCode: 200,
         success: true,
-        message: 'Booking stats fetched successfully',
+        message: 'Payment stats fetched successfully',
         data: stats,
     });
 });
