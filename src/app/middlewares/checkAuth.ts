@@ -5,7 +5,6 @@ import AppError from '../errorHelpers/AppError';
 import {IsActive} from '../modules/user/user.interface';
 import {User} from '../modules/user/user.model';
 import {verifyToken} from '../utils/jwt';
-import {StatusCodes} from 'http-status-codes';
 
 export const checkAuth =
     (...authRoles: string[]) =>
@@ -14,7 +13,7 @@ export const checkAuth =
             const accessToken = req.headers.authorization;
 
             if (!accessToken) {
-                throw new AppError(403, 'No Token Recieved');
+                throw new AppError(401, 'No Token received');
             }
 
             const verifiedToken = verifyToken(
@@ -27,28 +26,19 @@ export const checkAuth =
             });
 
             if (!isUserExist) {
-                throw new AppError(
-                    StatusCodes.BAD_REQUEST,
-                    'User does not exist',
-                );
+                throw new AppError(404, 'User does not exist');
             }
             if (!isUserExist.isVerified) {
-                throw new AppError(
-                    StatusCodes.BAD_REQUEST,
-                    'User is not verified',
-                );
+                throw new AppError(403, 'User is not verified');
             }
             if (
                 isUserExist.isActive === IsActive.BLOCKED ||
                 isUserExist.isActive === IsActive.INACTIVE
             ) {
-                throw new AppError(
-                    StatusCodes.BAD_REQUEST,
-                    `User is ${isUserExist.isActive}`,
-                );
+                throw new AppError(403, `User is ${isUserExist.isActive}`);
             }
             if (isUserExist.isDeleted) {
-                throw new AppError(StatusCodes.BAD_REQUEST, 'User is deleted');
+                throw new AppError(410, 'User is deleted');
             }
 
             if (!authRoles.includes(verifiedToken.role)) {

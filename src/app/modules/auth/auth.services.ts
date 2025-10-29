@@ -17,14 +17,14 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     const isUserExist = await User.findOne({email});
 
     if (!isUserExist) {
-        throw new AppError(StatusCodes.BAD_REQUEST, 'Email does not exist');
+        throw new AppError(404, 'Email does not exist');
     }
     const isPasswordMatched = await bcryptjs.compare(
         password as string,
         isUserExist.password as string,
     );
     if (!isPasswordMatched) {
-        throw new AppError(StatusCodes.BAD_REQUEST, 'Incorrect password');
+        throw new AppError(401, 'Incorrect password');
     }
     const userTokens = createUserTokens(isUserExist);
 
@@ -37,8 +37,9 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     };
 };
 const getNewAccessToken = async (refreshToken: string) => {
-    const newAccessToken =
-        await createAccessTokenWithRefreshToken(refreshToken);
+    const newAccessToken = await createAccessTokenWithRefreshToken(
+        refreshToken,
+    );
     return {
         accessToken: newAccessToken,
     };
