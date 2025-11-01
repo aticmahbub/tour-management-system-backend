@@ -26,6 +26,18 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     if (!isPasswordMatched) {
         throw new AppError(401, 'Incorrect password');
     }
+    if (!isUserExist.isVerified) {
+        throw new AppError(401, 'User is not verified');
+    }
+    if (
+        isUserExist.isActive === IsActive.BLOCKED ||
+        isUserExist.isActive === IsActive.INACTIVE
+    ) {
+        throw new AppError(403, `User is ${isUserExist.isActive}`);
+    }
+    if (isUserExist.isDeleted) {
+        throw new AppError(410, 'User is deleted');
+    }
     const userTokens = createUserTokens(isUserExist);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
