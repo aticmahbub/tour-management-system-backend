@@ -59,7 +59,7 @@ const getSingleUser = catchAsync(
 
         sendResponse(res, {
             success: true,
-            statusCode: statusCodes.OK,
+            statusCode: 201,
             message: 'User retrieved successfully',
             data: result.data,
         });
@@ -73,7 +73,7 @@ const getMe = catchAsync(
 
         sendResponse(res, {
             success: true,
-            statusCode: statusCodes.OK,
+            statusCode: 201,
             message: 'User retrieved successfully',
             data: result.data,
         });
